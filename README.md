@@ -139,7 +139,7 @@ for (int i = 0; i < 10000; i++) {
 - LATIN-1 以外の文字を含む 
   - UTF-16（1文字2バイト）で扱う
 
-![](/img/string.svg)
+![](img/string.svg)
 
 ---
 
@@ -179,7 +179,7 @@ Java 9 以降の OpenJDK コンパイラの場合<br>
 
 - key = "foo", value = 123 の場合
 
-![center](/img/string-concat.drawio.svg)
+![center](img/string-concat.drawio.svg)
 
 ---
 
@@ -202,7 +202,7 @@ row += age + ",";
 
 # 分割した際の動き
 
-![](/img/string-copy.drawio.svg)
+![](img/string-copy.drawio.svg)
 
 <div class="warn">
 += で結合すると、その度にコピーが発生してしまう
@@ -254,7 +254,7 @@ public String example(String key, int value) {
 
 # StringBuilder 文字列結合の動き
 
-![center](/img/string-builder.drawio.svg)
+![center](img/string-builder.drawio.svg)
 
 ---
 
@@ -264,7 +264,7 @@ public String example(String key, int value) {
 2. 中身をコピー
 3. 新しい配列に文字を格納
 
-![center](/img/string-builder2.drawio.svg)
+![center](img/string-builder2.drawio.svg)
 
 ---
 
