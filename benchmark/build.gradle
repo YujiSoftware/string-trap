@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+    id 'me.champeau.jmh' version '0.7.2'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    jmh 'org.openjdk.jmh:jmh-core:1.37'
+    jmhAnnotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess:1.37'
+}
+
+jmh {
+    // Short
+    // warmupIterations = 2
+    // iterations = 3
+    // fork = 1
+    // profilers = ['gc']
+    // timeOnIteration = '1s'
+    // warmup = '1s'
+
+    // Full
+    warmupIterations = 5
+    iterations = 5
+    fork = 2
+    profilers = ['gc']
+    timeOnIteration = '1s'
+    warmup = '1s'
+
+    // includes = ["benchmark.StringConcat10Benchmark"]
+}

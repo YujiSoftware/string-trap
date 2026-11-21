@@ -50,7 +50,7 @@ style: |
     color: #052c65;
     padding: 0.5em;
     border-radius: 10px;
-    margin: 10px 0;
+    margin: 0.5em 0;
   }
   .warn::before {
     content: "⚠️";
@@ -80,11 +80,11 @@ style: |
 
 # 注意事項
 
-- このセッションでは String クラスに関する「速くなる書き方」と「遅くなる書き方」について解説します。
+- このセッションでは「速くなる書き方」と「遅くなる書き方」について解説します。
 
 <hr>
 
-- 遅い != **悪い** ではない
+- 遅い = 悪い **ではない**
 - 実行頻度の低いコードは遅くても困らない
   - 例：ユニットテスト、初期化処理
   - これらは、遅くなる書き方でも 1ms も変わらない
@@ -92,49 +92,70 @@ style: |
 
 ---
 
-# 文字列の作り方
+# パフォーマンスの感覚
+
+```java
+for (int i = 0; i < 10000; i++) {
+  for (int i = 0; i < 10000; i++) {
+    // 処理
+  } 
+}
+```
+- 1万回の二重ループ
+  - ループ内の実行回数は **1億回**
+- ループ1回が 100ns 遅くなると、**全体では 10秒遅くなる**
+
+<div class="info">
+実行速度と計算回数の意識が大事
+</div>
+
+---
+
+# 文字列の作り方による違い
 
 - \+ 演算子による文字列結合
 - StringBuilder クラスを使う
 - String#formatted メソッドを使う
 
-どれが速い？遅い？
+どれが**速い？遅い？**
 
 ---
 
-# 前提：String の構造
+# 前提：文字列(String)の構造
 
 - 特徴
-  - 不変クラス（= 文字列の変更は作り直し）
+  - 不変クラス
+    - 文字列の変更は作り直し
 - 主な中身
   - byte 配列
-    - LATIN1 の文字**のみ**なら、1文字1バイトで扱う
-    - UTF-16 の文字を含むなら、1文字2バイトで扱う
   - エンコーディング識別子
-    - LATIN1 または UTF-16 のどちらか
 
 ---
 
-# 前提：String の構造
+# 前提：文字列(String) の構造
 
-TODO: 図で解説
+- LATIN-1 の文字**のみ**
+  - LATIN-1（1文字1バイト）で扱う
+- LATIN-1 以外の文字を含む 
+  - UTF-16（1文字2バイト）で扱う
+
+![](/img/string.svg)
 
 ---
 
 # \+ 演算子による文字列結合
 
-- 一番よく使う書き方
 - メリット
   - 書きやすい
-  - **一度に**文字列を結合するなら、これが最速
+- **一度に**文字列を結合するなら、これがベスト
 
 ```java
 public String example(String key, int value) {
-  return key + ": " + value;
+  return key + ":" + value;
 }
 ```
 
-どういう処理になっているのか？
+これはどう動く？
 
 ---
 
@@ -143,38 +164,62 @@ public String example(String key, int value) {
 1. 全体の長さを計算
     - エンコーディング<span class="supplement">（LATIN1 or UTF-16）</span>を確認
 2. ちょうど収まる長さの byte 配列を作成
-3. 配列に文字を格納
+3. 各要素を文字に変換して、byte配列に格納
 
-TODO: 図
+→ **無駄なく配列に文字を詰め込むようになっている**
+
+<div class="info">
+Java 9 以降の OpenJDK コンパイラの場合<br>
+（Java 8 までは、StringBuilder に変換される）
+</div>
+
+---
+
+# \+ 演算子による文字列結合の実装
+
+- key = "foo", value = 123 の場合
+
+![center](/img/string-concat.drawio.svg)
 
 ---
 
 # \+ 演算子の罠
 
-- 分割すると遅くなる
-  - 横に長くなると、処理を分けたくなるが…
+- 分割すると、ちょっと遅くなる
+  - 横に長くなってくると、文を分けたくなるが…
 
 ```java
-String text = key + ": " + value + " [a = " + a + ", b = "  + b + "]";
+String row = id + "," + name + "," + age + "," + address + …
 ```
 ↓
-
 ```java
-String text = key + ": " + value;
-text += "["
-text += "a = " + a + ",";
-text += "b = " + b;
-text += "]";
+String row = id + ",";
+row += name + ",";
+row += age + ",";
+…
 ```
-
 ---
 
 # 分割した際の動き
 
-TODO: 図
+![](/img/string-copy.drawio.svg)
 
 <div class="warn">
-+= での文字列結合は要注意！
++= で結合すると、その度にコピーが発生してしまう
+</div>
+
+---
+
+# 参考：どのぐらい差になるのか
+
+- 10個の変数を , 区切りで結合する処理で計測
+  - 一度にまとめた場合： 49.839ns/op
+  - 一つずつ分けた場合： 88.198ns/op
+
+→ 分割すると、実行速度が **1.77倍** になる
+
+<div class="info">
+環境による差異もあるので、あくまで参考程度
 </div>
 
 ---
@@ -183,7 +228,7 @@ TODO: 図
 
 - 文字列を編集するためのクラス
   - 内部でどういう動きになっているのか？
-  - \+ 演算子と比べて、どっちのほうがいいのか？
+  - \+ 演算子と比べて、どのぐらい性能がいいのか？
 
 ```java
 public String example(String key, int value) {
@@ -200,29 +245,34 @@ public String example(String key, int value) {
 
 1. new StringBuilder()
     - バッファ（長さ16のbyte 配列）を作成
-2. append(key)
+2. .append(...)
     - バッファに追加
-3. toString()
+3. .toString()
     - バッファを元に文字列を作成
 
 ---
 
 # StringBuilder 文字列結合の動き
 
-TODO: 図
+![center](/img/string-builder.drawio.svg)
+
+---
+
+# バッファが足りないとき
+
+1. **倍の長さ**の新しい配列を作る
+2. 中身をコピー
+3. 新しい配列に文字を格納
+
+![center](/img/string-builder2.drawio.svg)
 
 ---
 
 # \+ 演算子との使い分け
 
-- 一度に結合できるなら \+ 演算子が最速
-  - StirngBuilder だと、少し遅い
-- 一度に結合できないなら、StringBuilder が最速
+- 一度に結合**できる**なら \+ 演算子が最速
+- 一度に結合**できない**なら、StringBuilder が最速
   - ループで処理する場合など
-
-```java
-
-```
 
 どのぐらいの差があるのか？
 
@@ -234,7 +284,7 @@ TODO: 図
 
 
 <div class="warn">
-+ 演算子の文字列結合の連続は、二次関数的に遅くなる
++ 演算子の文字列結合の連続は、急激に遅くなる
 </div>
 
 ---
@@ -243,8 +293,8 @@ TODO: 図
 
 - 初期のバッファサイズが小さい
 - 予測でいいので、収まるサイズを指定する
-  - 少し速くなる
-  - メモリ使用量も減る
+  - コピーが減るので、少し速くなる
+  - GC にも優しい
 
 ```java
 TODO
@@ -252,15 +302,17 @@ TODO
 
 ---
 
-# String#formatted
+# String#format
 
 - メリット
   - 柔軟なフォーマットの指定が可能
-  - 結果がわかりやすい
-- String.format とは、書き方が違うだけで処理は同じ
+  - できあがる文字列がわかりやすい
+- String.formatted とは、書き方が違うだけで処理は同じ
 
 ```java
 public String example(String key, int value) {
+  return String.format("%s: %d", key, value);
+  -- or -- 
   return "%s: %d".formatted(key, value);
 }
 ```
@@ -278,15 +330,6 @@ public String example(String key, int value) {
 - 速度が重要な場面では使用を避ける
   - 数字の桁を揃えるぐらいなら、気合でなんとかなる
     - AIに頼めばやってくれる
-
----
-
-# String メソッドの罠
-
-- 置換処理
-  - replace と replaceAll
-- 検索処理
-  - contains と matches
 
 ---
 
