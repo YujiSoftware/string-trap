@@ -96,7 +96,7 @@ style: |
 
 ```java
 for (int i = 0; i < 10000; i++) {
-  for (int i = 0; i < 10000; i++) {
+  for (int j = 0; j < 10000; j++) {
     // 処理
   } 
 }
@@ -212,11 +212,11 @@ row += age + ",";
 
 # 参考：どのぐらい差になるのか
 
-- 10個の変数を , 区切りで結合する処理で計測
+- 自宅PCで、10個の変数を , 区切りで結合する処理を計測
   - 一度にまとめた場合： 49.839ns/op
   - 一つずつ分けた場合： 88.198ns/op
 
-→ 分割すると、実行速度が **1.77倍** になる
+→ 分割すると、実行時間が **1.77倍** に伸びた
 
 <div class="info">
 環境による差異もあるので、あくまで参考程度
@@ -244,7 +244,7 @@ public String example(String key, int value) {
 # StringBuilder 文字列結合の動き
 
 1. new StringBuilder()
-    - バッファ（長さ16のbyte 配列）を作成
+    - 16文字分の容量のバッファを作成
 2. .append(...)
     - バッファに追加
 3. .toString()
@@ -260,7 +260,7 @@ public String example(String key, int value) {
 
 # バッファが足りないとき
 
-1. **倍の長さ**の新しい配列を作る
+1. **約2倍**の容量に拡張する（正確には2倍＋2）
 2. 中身をコピー
 3. 新しい配列に文字を格納
 
@@ -270,8 +270,8 @@ public String example(String key, int value) {
 
 # \+ 演算子との使い分け
 
-- 一度に結合**できる**なら \+ 演算子が最速
-- 一度に結合**できない**なら、StringBuilder が最速
+- 一度に結合**できる**なら \+ 演算子を使う
+- 一度に結合**できない**なら、基本的に StringBuilder を使う
   - ループで処理する場合など
 
 どのぐらいの差があるのか？
@@ -302,7 +302,7 @@ TODO
 
 ---
 
-# String#format
+# String.format / String#formatted
 
 - メリット
   - 柔軟なフォーマットの指定が可能
@@ -340,3 +340,13 @@ public String example(String key, int value) {
 # 引き出そう！
 
 ![width:150px height:150px](img/photo.jpg) @YujiSoftware
+
+---
+
+# 参考：ベンチマーク環境
+
+* JDK: OpenJDK 25.0.5 (LTS)
+* CPU: AMD Ryzen™ 7 5700X（16コア）
+* OS:	Ubuntu 26.0.4
+* Warmup: 1秒×5回
+* Measurement	1秒×5回
