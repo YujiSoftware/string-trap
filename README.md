@@ -130,8 +130,7 @@ for (int i = 0; i < 10000; i++) {
 # 大事なポイント
 
 - 内部の実装を把握する
-  - 使い方による速度の違いは大事
-  - でも、**どういう仕組みだから**差が生じているのかを理解することが大事
+  - **どういう仕組みだから**実行速度に差が生じているのかを理解することが大事
     - そのほうが応用が効く
 
 ---
@@ -163,7 +162,7 @@ for (int i = 0; i < 10000; i++) {
 - LATIN1 の文字**のみ**
   - LATIN1（1文字1バイト）で扱う
 - LATIN1 以外の文字を含む 
-  - UTF-16（1文字2バイト）で扱う
+  - UTF-16（1コード単位につき2バイト）で扱う
 
 ![](img/string.svg)
 
@@ -203,7 +202,7 @@ Java 9 以降の OpenJDK コンパイラの場合<br>
 
 # \+ 演算子による文字列結合の実装
 
-- key = "foo", value = 123 の場合
+- key = "foo", value = 12 の場合
 
 ![center](img/string-concat.drawio.svg)
 
@@ -259,7 +258,7 @@ row += age + ",";
 ```java
 public String example(String key, int value) {
   var sb = new StringBuilder();
-  sb.append(key).append(": ").append(value);
+  sb.append(key).append(":").append(value);
 
   return sb.toString();
 }
@@ -305,9 +304,9 @@ public String example(String key, int value) {
 
 ---
 
-# String vs StringBuilder
+# 参考：String vs StringBuilder
 
-- 自宅PCで、8列のデータをカンマ区切りで結合するサンプルを計測（ns/op）
+- 自宅PCで、8列のデータをカンマ区切りで結合するサンプルコードを計測（ns/op）
 
 |行数|100|1,000|10,000|100,000|
 |:--|--:|--:|--:|--:|
@@ -326,7 +325,6 @@ String の + 演算子結合の連続は、急激に遅くなる
 - **初期のバッファサイズが小さい**（16文字分）
 - 予測でいいので、全体のサイズを指定する
   - コピーが減るので、少し速くなる
-    （手元の環境では約5～15%ほど速くなった）
   - 特に、文字列が長くなる場合は効果がある
 
 ```java
@@ -376,26 +374,39 @@ return new Formatter().format(format, args).toString();
 
 # String.format の罠
 
-- **新しいバージョンではかなり速くなっている**
-  - Java 16 までは、かなり遅い
-    - 内部で正規表現を使っていたため
-  - **Java 17 以降**は、改善が進んで速くなった
-    - 正規表現を使わない実装に書き換えられた
-  - その後も Java 19, 21 で改善が入った
+- \+ 演算子や StringBuilder に比べて、**遅い**
+  - パース処理や汎用的な変換処理による影響
+- ただし、**新しいバージョンではかなり改善されている**
+
+→ バージョンによって、使うかどうかの判断が分かれる
+
+---
+
+# 参考：バージョンごとの速度差
+
+- String.format("%s: %d", key, value); の実行時間を測定
+
+![center](img/formatter.png)
+
+---
+
+# 改善要因
+
+- Java 16 まで、**パースに正規表現を使っているので遅かった**
+- Java 17 で、単純なフォーマット（例：%d や %s）ならば
+正規表現を使わない実装になった
+- Java 19, 21 で細かい改善が行われた
+- Java 23 で、複雑なフォーマット（例：%05d や %.2f）でも正規表現を使わない実装になった
+
+→ 単純な結合だけなら、依然として \+ 演算子のほうが良い
+→ フォーマット指定が必要なら、使うのはアリ
 
 <!--
 - [\[JDK-8263038\] Optimize String.format for simple specifiers](https://bugs.openjdk.org/browse/JDK-8263038)
 - [\[JDK-8278642\] Refactor java.util.Formatter](https://bugs.openjdk.org/browse/JDK-8278642)
 - [\[JDK-8335252\] Reduce size of j.u.Formatter.Conversion#isValid](https://bugs.openjdk.org/browse/JDK-8335252)
+[\[JDK-8316704\] Regex-free parsing of Formatter and FormatProcessor specifiers - Java Bug System](https://bugs.openjdk.org/browse/JDK-8316704)
 -->
-
----
-
-# バージョンごとの速度差
-
-- String.format("%s: %d", key, value); の実行時間を測定
-
-![center](img/formatter.png)
 
 ---
 
