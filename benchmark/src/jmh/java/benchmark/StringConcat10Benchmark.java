@@ -1,7 +1,6 @@
 
 package benchmark;
 
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmh.annotations.*;

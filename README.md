@@ -78,6 +78,22 @@ style: |
 
 ---
 
+# 目次
+
+- 前置き
+- 文字列の作り方による違い
+  - \+ 演算子による文字列結合の場合
+  - StringBuilder クラスを使った場合
+  - String.format メソッドを使った場合
+
+
+<div class="info">
+本日のセッション資料 <br>
+https://yuji.software/string-trap に置いてあります。
+</div>
+
+---
+
 # 注意事項
 
 - このセッションでは「速くなる書き方」と「遅くなる書き方」について解説します。
@@ -111,13 +127,23 @@ for (int i = 0; i < 10000; i++) {
 
 ---
 
+# 大事なポイント
+
+- 内部の実装を把握する
+  - 使い方による速度の違いは大事
+  - でも、**どういう仕組みだから**差が生じているのかを理解することが大事
+    - そのほうが応用が効く
+
+---
+
 # 文字列の作り方による違い
 
-- \+ 演算子による文字列結合
-- StringBuilder クラスを使う
-- String#formatted メソッドを使う
+- \+ 演算子による文字列結合の場合
+- StringBuilder クラスを使った場合
+- String.format メソッドを使った場合
 
 どれが**速い？遅い？**
+遅いというのは、どれぐらい？
 
 ---
 
@@ -134,9 +160,9 @@ for (int i = 0; i < 10000; i++) {
 
 # 前提：文字列(String) の構造
 
-- LATIN-1 の文字**のみ**
-  - LATIN-1（1文字1バイト）で扱う
-- LATIN-1 以外の文字を含む 
+- LATIN1 の文字**のみ**
+  - LATIN1（1文字1バイト）で扱う
+- LATIN1 以外の文字を含む 
   - UTF-16（1文字2バイト）で扱う
 
 ![](img/string.svg)
@@ -164,7 +190,7 @@ public String example(String key, int value) {
 1. 全体の長さを計算
     - エンコーディング<span class="supplement">（LATIN1 or UTF-16）</span>を確認
 2. ちょうど収まる長さの byte 配列を作成
-3. 各要素を文字に変換して、byte配列に格納
+3. 各要素を文字列として表現し、必要な領域にコピーする
 
 → **無駄なく配列に文字を詰め込むようになっている**
 
@@ -213,8 +239,8 @@ row += age + ",";
 # 参考：どのぐらい差になるのか
 
 - 自宅PCで、10個の変数を , 区切りで結合する処理を計測
-  - 一度にまとめた場合： 49.839ns/op
-  - 一つずつ分けた場合： 88.198ns/op
+  - 一度にまとめた場合： 49.839 (±0.160) ns/op
+  - 一つずつ分けた場合： 88.198 (±0.321) ns/op
 
 → 分割すると、実行時間が **1.77倍** に伸びた
 
@@ -268,36 +294,43 @@ public String example(String key, int value) {
 
 ---
 
-# \+ 演算子との使い分け
+# String の \+ 演算子との使い分け
 
 - 一度に結合**できる**なら \+ 演算子を使う
 - 一度に結合**できない**なら、基本的に StringBuilder を使う
   - ループで処理する場合など
 
 どのぐらいの差があるのか？
+（\+ 演算子もだいぶ速くなったけど…？）
 
 ---
 
-# \+ 演算子 vs StringBuilder
+# String vs StringBuilder
 
+- 自宅PCで、8列のデータをカンマ区切りで結合するサンプルを計測（ns/op）
 
-
+|行数|100|1,000|10,000|100,000|
+|:--|--:|--:|--:|--:|
+|String|26,403|2,406,795|315,674,831|36,596,801,877|
+|Builder|6,453|65,769|700,336|8,275,654|
+|比率|4|37|451|4,422|
 
 <div class="warn">
-+ 演算子の文字列結合の連続は、急激に遅くなる
+String の + 演算子結合の連続は、急激に遅くなる
 </div>
 
 ---
 
 # StringBuilder の罠
 
-- 初期のバッファサイズが小さい
-- 予測でいいので、収まるサイズを指定する
+- **初期のバッファサイズが小さい**（16文字分）
+- 予測でいいので、全体のサイズを指定する
   - コピーが減るので、少し速くなる
-  - GC にも優しい
+    （手元の環境では約5～15%ほど速くなった）
+  - 特に、文字列が長くなる場合は効果がある
 
 ```java
-TODO
+var sb = new StringBuilder(rows.length * 128);
 ```
 
 ---
@@ -321,15 +354,53 @@ public String example(String key, int value) {
 
 # 実装
 
+- Formatter クラスに移譲している
+```java
+return new Formatter().format(format, args).toString();
+```
+
+1. new Formtter(): 
+    - 内部で StringBuilder を作成
+2. format(format, args)
+    - 引数の format をパース
+    - 変換しつつ StringBuilder に追加
+4. toString()
+
 ---
 
-# String#formatted の罠
+# 実装
 
-- \+演算子と比較して、とにかく遅い
-  - 先程の例だと、なんと**300倍遅い！**
-- 速度が重要な場面では使用を避ける
-  - 数字の桁を揃えるぐらいなら、気合でなんとかなる
-    - AIに頼めばやってくれる
+![center](img/string-format.drawio.svg)
+
+---
+
+# String.format の罠
+
+- **新しいバージョンではかなり速くなっている**
+  - Java 16 までは、かなり遅い
+    - 内部で正規表現を使っていたため
+  - **Java 17 以降**は、改善が進んで速くなった
+    - 正規表現を使わない実装に書き換えられた
+  - その後も Java 19, 21 で改善が入った
+
+<!--
+- [\[JDK-8263038\] Optimize String.format for simple specifiers](https://bugs.openjdk.org/browse/JDK-8263038)
+- [\[JDK-8278642\] Refactor java.util.Formatter](https://bugs.openjdk.org/browse/JDK-8278642)
+- [\[JDK-8335252\] Reduce size of j.u.Formatter.Conversion#isValid](https://bugs.openjdk.org/browse/JDK-8335252)
+-->
+
+---
+
+# バージョンごとの速度差
+
+- String.format("%s: %d", key, value); の実行時間を測定
+
+![center](img/formatter.png)
+
+---
+
+# まとめ
+
 
 ---
 
@@ -345,8 +416,11 @@ public String example(String key, int value) {
 
 # 参考：ベンチマーク環境
 
-* JDK: OpenJDK 25.0.5 (LTS)
-* CPU: AMD Ryzen™ 7 5700X（16コア）
-* OS:	Ubuntu 26.0.4
-* Warmup: 1秒×5回
-* Measurement	1秒×5回
+- AMD Ryzen™ 7 5700X（8コア16スレッド）
+- Ubuntu 26.04
+- OpenJDK 25.0.5 (LTS)
+- Java Microbenchmark Harness 1.37
+  - Warmup: 1秒×5回
+  - Measurement	1秒×5回
+  - Fork: 2
+- Code: https://github.com/YujiSoftware/string-trap/tree/main/benchmark
