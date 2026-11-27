@@ -78,14 +78,13 @@ style: |
 
 ---
 
-# 目次
+# 概要
 
-- 前置き
-- 文字列の作り方による違い
-  - \+ 演算子による文字列結合の場合
-  - StringBuilder クラスを使った場合
-  - String.format メソッドを使った場合
-
+- Java で String クラス（文字列）は、基本的にパフォーマンス（実行速度）を気にせずに使える
+- しかし、それでも遅くなるときがある
+  - どういうときなのか
+  - どうして遅くなるのか
+  - どうすればいいのか
 
 <div class="info">
 本日のセッション資料 <br>
@@ -290,9 +289,10 @@ String の + 演算子結合の連続は、急激に遅くなる
 # StringBuilder の罠
 
 - **初期のバッファサイズが小さい**（16文字分）
-- 予測でいいので、全体のサイズを指定する
+- **コンストラクタで全体のサイズを指定したほうがいい**
+  - 指定する値は、予測でも構わない
   - コピーが減るので、少し速くなる
-  - 特に、文字列が長くなる場合は効果がある
+    - 特に、文字列が長くなる場合は効果がある
 
 ```java
 var sb = new StringBuilder(rows.length * 128);
@@ -300,10 +300,31 @@ var sb = new StringBuilder(rows.length * 128);
 
 ---
 
+# StringBuilder の良くない使い方
+
+- **Bad:** \+演算子と併用する（約10%ぐらい遅くなる）
+- **Good:** .append(…) のみを使う
+
+```java
+var csv = new StringBuilder();
+for (String[] row : rows) {
+    // Bad
+    csv.append(row[0] + "," + row[1] + "," + row[2] + "\r\n");
+    // Good
+    csv.append(row[0]).append(",");
+    csv.append(row[1]).append(",");
+    csv.append(row[2]).append("\r\n");
+}
+```
+
+
+
+---
+
 # String.format / String#formatted
 
 - メリット
-  - 柔軟なフォーマットの指定が可能
+  - 柔軟な書式の指定が可能
   - できあがる文字列がわかりやすい
 - String.formatted とは、書き方が違うだけで処理は同じ
 
@@ -342,10 +363,9 @@ return new Formatter().format(format, args).toString();
 # String.format の罠
 
 - \+ 演算子や StringBuilder に比べて、**遅い**
-  - パース処理や汎用的な変換処理による影響
+  - 主にパースによる影響
 - ただし、**新しいバージョンではかなり改善されている**
-
-→ バージョンによって、使うかどうかの判断が分かれる
+  - 逆に言うと、古い Java を使っているなら要注意
 
 ---
 
@@ -360,13 +380,13 @@ return new Formatter().format(format, args).toString();
 # 改善要因
 
 - Java 16 まで、**パースに正規表現を使っているので遅かった**
-- Java 17 で、単純なフォーマット（例：%d や %s）ならば
+- Java 17 で、単純な書式指定子（例：%d や %s）ならば
 正規表現を使わない実装になった
 - Java 19, 21 で細かい改善が行われた
-- Java 23 で、複雑なフォーマット（例：%05d や %.2f）でも正規表現を使わない実装になった
+- Java 23 で、複雑な書式指定子（例：%05d や %.2f）でも正規表現を使わない実装になった
 
-→ 単純な結合だけなら、**依然として \+ 演算子のほうが良い**
-→ **フォーマット指定**が必要なら、使うのはアリ
+→ 単純な結合なら、**依然として \+ 演算子のほうが良い**
+→ 桁揃えなど**書式指定**のためなら、使うのはアリ？
 
 <!--
 - [\[JDK-8263038\] Optimize String.format for simple specifiers](https://bugs.openjdk.org/browse/JDK-8263038)
@@ -379,6 +399,12 @@ return new Formatter().format(format, args).toString();
 
 # まとめ
 
+- Java で String クラス（文字列）は、基本的に速い
+  - しかし、実行回数が多いときは気をつける必要がある
+- 適切な文字列の使い方をすると、遅くなるのは回避できる
+  - 内部実装を知っておくとハマりにくい
+
+文字列の処理でパフォーマンスが求められたときは、このセッションのことを思い出そう！
 
 ---
 
@@ -392,6 +418,67 @@ return new Formatter().format(format, args).toString();
 
 ---
 
+<!-- _class: lead -->
+
+# 補足資料
+
+---
+
+# ログの場合
+
+- Q. ログの場合は文字列結合を使ったほうがいい？
+- A. いいえ
+&nbsp;
+- ログレベルによって、ログを出さない場合がある
+  - 書式指定の場合、その場合に文字列結合をしないですむ
+
+```java
+logger.info("Key: {}, Value: {}", key, value);  // Good
+----
+logger.info("Key: " + key + ", Value: " + value);  // Bad
+```
+
+---
+
+# String.format の実装について
+
+- 毎回、書式をパースするの無駄では？
+- ということで、パースした結果を内部で保持する改善提案があがった
+  - [8335791: Speed ​​up j.u.Formatter & String.format by wenshao · Pull Request #20055 · openjdk/jdk](https://github.com/openjdk/jdk/pull/20055?utm_source=chatgpt.com)
+  - しかし、String Template と併せて検討するということになりクローズ
+- その後、String Template が**当分見送り**になってしまった…
+
+---
+
+# 正規表現の扱い方 (1)
+
+- replaceAll メソッドは、内部で正規表現のコンパイルをしている
+```java
+public String replaceAll(String regex, String replacement) {
+    return Pattern.compile(regex).matcher(this).replaceAll(replacement);
+}
+```
+
+- このコンパイルが**かなり遅い**し、正規表現自体も遅い
+- 正規表現マッチが不要なら **replace メソッド**を使う
+  - 名前が紛らわしいが、replace メソッドも**すべて置換する**
+
+---
+
+# 正規表現の扱い方 (2)
+
+- もし何度も実行するなら、Pattern クラスを定数として保持しておく
+
+```java
+private static final Pattern MASK = Pattern.compile("\\d");
+---
+String masked = MASK.matcher(tel).replaceAll("*");
+```
+
+- String.matches メソッドを使うときも同様
+
+---
+
 # 参考：ベンチマーク環境
 
 - AMD Ryzen™ 7 5700X（8コア16スレッド）
@@ -402,3 +489,11 @@ return new Formatter().format(format, args).toString();
   - Measurement	1秒×5回
   - Fork: 2
 - Code: https://github.com/YujiSoftware/string-trap/tree/main/benchmark
+
+---
+
+# アンケートにご協力ください
+
+|全体アンケート|セッションアンケート|
+|:--:|:--:|
+|![width:400px](img/jjug_qr.png)|![width:400px](img/session_qr.png)|

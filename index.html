@@ -261,14 +261,14 @@ span.supplement {
   font-size: 36px;
 }
 ;">
-<h1 id="%E7%9B%AE%E6%AC%A1">目次</h1>
+<h1 id="%E6%A6%82%E8%A6%81">概要</h1>
 <ul>
-<li>前置き</li>
-<li>文字列の作り方による違い
+<li>Java で String クラス（文字列）は、基本的にパフォーマンス（実行速度）を気にせずに使える</li>
+<li>しかし、それでも遅くなるときがある
 <ul>
-<li>+ 演算子による文字列結合の場合</li>
-<li>StringBuilder クラスを使った場合</li>
-<li>String.format メソッドを使った場合</li>
+<li>どういうときなのか</li>
+<li>どうして遅くなるのか</li>
+<li>どうすればいいのか</li>
 </ul>
 </li>
 </ul>
@@ -2430,10 +2430,14 @@ span.supplement {
 <h1 id="stringbuilder-%E3%81%AE%E7%BD%A0">StringBuilder の罠</h1>
 <ul>
 <li><strong>初期のバッファサイズが小さい</strong>（16文字分）</li>
-<li>予測でいいので、全体のサイズを指定する
+<li><strong>コンストラクタで全体のサイズを指定したほうがいい</strong>
 <ul>
-<li>コピーが減るので、少し速くなる</li>
+<li>指定する値は、予測でも構わない</li>
+<li>コピーが減るので、少し速くなる
+<ul>
 <li>特に、文字列が長くなる場合は効果がある</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -2561,11 +2565,148 @@ span.supplement {
   font-size: 36px;
 }
 ;">
+<h1 id="stringbuilder-%E3%81%AE%E8%89%AF%E3%81%8F%E3%81%AA%E3%81%84%E4%BD%BF%E3%81%84%E6%96%B9">StringBuilder の良くない使い方</h1>
+<ul>
+<li><strong>Bad:</strong> +演算子と併用する（約10%ぐらい遅くなる）</li>
+<li><strong>Good:</strong> .append(…) のみを使う</li>
+</ul>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-java"><span class="hljs-type">var</span> <span class="hljs-variable">csv</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuilder</span>();
+<span class="hljs-keyword">for</span> (String[] row : rows) {
+    <span class="hljs-comment">// Bad</span>
+    csv.append(row[<span class="hljs-number">0</span>] + <span class="hljs-string">&quot;,&quot;</span> + row[<span class="hljs-number">1</span>] + <span class="hljs-string">&quot;,&quot;</span> + row[<span class="hljs-number">2</span>] + <span class="hljs-string">&quot;\r\n&quot;</span>);
+    <span class="hljs-comment">// Good</span>
+    csv.append(row[<span class="hljs-number">0</span>]).append(<span class="hljs-string">&quot;,&quot;</span>);
+    csv.append(row[<span class="hljs-number">1</span>]).append(<span class="hljs-string">&quot;,&quot;</span>);
+    csv.append(row[<span class="hljs-number">2</span>]).append(<span class="hljs-string">&quot;\r\n&quot;</span>);
+}
+</code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="20" data-theme="gaia" data-style=":root {
+  --color-background: #fff;
+  --color-foreground: #000;
+  --color-highlight: #1a0dab;
+  --color-dimmed: #888;
+  font-size: 40px;
+  line-height: 1.2;
+}
+
+/** 詰め気味に微調整 **/
+section &gt; ul, marp-pre {
+  margin: 0.5em 0;
+}
+h1 {
+  margin-bottom: 0.5em;
+}
+
+section.lead img {
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+img[alt~=&quot;center&quot;] {
+  display: block;
+  margin: 0 auto;
+}
+
+.info {
+  border: 2px solid #dee2e6;
+  background-color: #cff4fc;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+.info::before {
+  content: &quot;📝&quot;;
+}
+.warn {
+  border: 2px solid #e3e6de;
+  background-color: #fcf9cf;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 0.5em 0;
+}
+.warn::before {
+  content: &quot;⚠️&quot;;
+}
+
+span.emphasis {
+  color: red;
+  font-weight: bold;
+}
+span.underline {
+  text-decoration: underline;
+}
+span.supplement {
+  font-size: 36px;
+}
+" lang="ja-JP" style="--theme:gaia;--style::root {
+  --color-background: #fff;
+  --color-foreground: #000;
+  --color-highlight: #1a0dab;
+  --color-dimmed: #888;
+  font-size: 40px;
+  line-height: 1.2;
+}
+
+/** 詰め気味に微調整 **/
+section &gt; ul, marp-pre {
+  margin: 0.5em 0;
+}
+h1 {
+  margin-bottom: 0.5em;
+}
+
+section.lead img {
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+img[alt~=&quot;center&quot;] {
+  display: block;
+  margin: 0 auto;
+}
+
+.info {
+  border: 2px solid #dee2e6;
+  background-color: #cff4fc;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+.info::before {
+  content: &quot;📝&quot;;
+}
+.warn {
+  border: 2px solid #e3e6de;
+  background-color: #fcf9cf;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 0.5em 0;
+}
+.warn::before {
+  content: &quot;⚠️&quot;;
+}
+
+span.emphasis {
+  color: red;
+  font-weight: bold;
+}
+span.underline {
+  text-decoration: underline;
+}
+span.supplement {
+  font-size: 36px;
+}
+;">
 <h1 id="stringformat--stringformatted">String.format / String#formatted</h1>
 <ul>
 <li>メリット
 <ul>
-<li>柔軟なフォーマットの指定が可能</li>
+<li>柔軟な書式の指定が可能</li>
 <li>できあがる文字列がわかりやすい</li>
 </ul>
 </li>
@@ -2578,7 +2719,7 @@ span.supplement {
 }
 </code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="20" data-theme="gaia" data-style=":root {
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="21" data-theme="gaia" data-style=":root {
   --color-background: #fff;
   --color-foreground: #000;
   --color-highlight: #1a0dab;
@@ -2720,7 +2861,7 @@ span.supplement {
 <li>toString()</li>
 </ol>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="21" data-theme="gaia" data-style=":root {
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="22" data-theme="gaia" data-style=":root {
   --color-background: #fff;
   --color-foreground: #000;
   --color-highlight: #1a0dab;
@@ -2844,7 +2985,7 @@ span.supplement {
 <h1 id="%E5%AE%9F%E8%A3%85-1">実装</h1>
 <p><img src="img/string-format.drawio.svg" alt="center" /></p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="22" data-theme="gaia" data-style=":root {
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="23" data-theme="gaia" data-style=":root {
   --color-background: #fff;
   --color-foreground: #000;
   --color-highlight: #1a0dab;
@@ -2969,14 +3110,17 @@ span.supplement {
 <ul>
 <li>+ 演算子や StringBuilder に比べて、<strong>遅い</strong>
 <ul>
-<li>パース処理や汎用的な変換処理による影響</li>
+<li>主にパースによる影響</li>
 </ul>
 </li>
-<li>ただし、<strong>新しいバージョンではかなり改善されている</strong></li>
+<li>ただし、<strong>新しいバージョンではかなり改善されている</strong>
+<ul>
+<li>逆に言うと、古い Java を使っているなら要注意</li>
 </ul>
-<p>→ バージョンによって、使うかどうかの判断が分かれる</p>
+</li>
+</ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="23" data-theme="gaia" data-style=":root {
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="24" data-theme="gaia" data-style=":root {
   --color-background: #fff;
   --color-foreground: #000;
   --color-highlight: #1a0dab;
@@ -3103,7 +3247,7 @@ span.supplement {
 </ul>
 <p><img src="img/formatter.png" alt="center" /></p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="24" data-theme="gaia" data-style=":root {
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="25" data-theme="gaia" data-style=":root {
   --color-background: #fff;
   --color-foreground: #000;
   --color-highlight: #1a0dab;
@@ -3227,15 +3371,15 @@ span.supplement {
 <h1 id="%E6%94%B9%E5%96%84%E8%A6%81%E5%9B%A0">改善要因</h1>
 <ul>
 <li>Java 16 まで、<strong>パースに正規表現を使っているので遅かった</strong></li>
-<li>Java 17 で、単純なフォーマット（例：%d や %s）ならば<br />
+<li>Java 17 で、単純な書式指定子（例：%d や %s）ならば<br />
 正規表現を使わない実装になった</li>
 <li>Java 19, 21 で細かい改善が行われた</li>
-<li>Java 23 で、複雑なフォーマット（例：%05d や %.2f）でも正規表現を使わない実装になった</li>
+<li>Java 23 で、複雑な書式指定子（例：%05d や %.2f）でも正規表現を使わない実装になった</li>
 </ul>
-<p>→ 単純な結合だけなら、<strong>依然として + 演算子のほうが良い</strong><br />
-→ <strong>フォーマット指定</strong>が必要なら、使うのはアリ</p>
+<p>→ 単純な結合なら、<strong>依然として + 演算子のほうが良い</strong><br />
+→ 桁揃えなど<strong>書式指定</strong>のためなら、使うのはアリ？</p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="25" data-theme="gaia" data-style=":root {
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="26" data-theme="gaia" data-style=":root {
   --color-background: #fff;
   --color-foreground: #000;
   --color-highlight: #1a0dab;
@@ -3357,8 +3501,21 @@ span.supplement {
 }
 ;">
 <h1 id="%E3%81%BE%E3%81%A8%E3%82%81">まとめ</h1>
+<ul>
+<li>Java で String クラス（文字列）は、基本的に速い
+<ul>
+<li>しかし、実行回数が多いときは気をつける必要がある</li>
+</ul>
+</li>
+<li>適切な文字列の使い方をすると、遅くなるのは回避できる
+<ul>
+<li>内部実装を知っておくとハマりにくい</li>
+</ul>
+</li>
+</ul>
+<p>文字列の処理でパフォーマンスが求められたときは、このセッションのことを思い出そう！</p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="26" data-class="lead" data-theme="gaia" data-style=":root {
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="27" data-class="lead" data-theme="gaia" data-style=":root {
   --color-background: #fff;
   --color-foreground: #000;
   --color-highlight: #1a0dab;
@@ -3484,7 +3641,671 @@ span.supplement {
 <h1 id="%E5%BC%95%E3%81%8D%E5%87%BA%E3%81%9D%E3%81%86-1">引き出そう！</h1>
 <p><img src="img/photo.jpg" alt="" style="width:150px;height:150px;" /> @YujiSoftware</p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="27" data-theme="gaia" data-style=":root {
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="28" data-class="lead" data-theme="gaia" data-style=":root {
+  --color-background: #fff;
+  --color-foreground: #000;
+  --color-highlight: #1a0dab;
+  --color-dimmed: #888;
+  font-size: 40px;
+  line-height: 1.2;
+}
+
+/** 詰め気味に微調整 **/
+section &gt; ul, marp-pre {
+  margin: 0.5em 0;
+}
+h1 {
+  margin-bottom: 0.5em;
+}
+
+section.lead img {
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+img[alt~=&quot;center&quot;] {
+  display: block;
+  margin: 0 auto;
+}
+
+.info {
+  border: 2px solid #dee2e6;
+  background-color: #cff4fc;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+.info::before {
+  content: &quot;📝&quot;;
+}
+.warn {
+  border: 2px solid #e3e6de;
+  background-color: #fcf9cf;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 0.5em 0;
+}
+.warn::before {
+  content: &quot;⚠️&quot;;
+}
+
+span.emphasis {
+  color: red;
+  font-weight: bold;
+}
+span.underline {
+  text-decoration: underline;
+}
+span.supplement {
+  font-size: 36px;
+}
+" lang="ja-JP" class="lead" style="--class:lead;--theme:gaia;--style::root {
+  --color-background: #fff;
+  --color-foreground: #000;
+  --color-highlight: #1a0dab;
+  --color-dimmed: #888;
+  font-size: 40px;
+  line-height: 1.2;
+}
+
+/** 詰め気味に微調整 **/
+section &gt; ul, marp-pre {
+  margin: 0.5em 0;
+}
+h1 {
+  margin-bottom: 0.5em;
+}
+
+section.lead img {
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+img[alt~=&quot;center&quot;] {
+  display: block;
+  margin: 0 auto;
+}
+
+.info {
+  border: 2px solid #dee2e6;
+  background-color: #cff4fc;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+.info::before {
+  content: &quot;📝&quot;;
+}
+.warn {
+  border: 2px solid #e3e6de;
+  background-color: #fcf9cf;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 0.5em 0;
+}
+.warn::before {
+  content: &quot;⚠️&quot;;
+}
+
+span.emphasis {
+  color: red;
+  font-weight: bold;
+}
+span.underline {
+  text-decoration: underline;
+}
+span.supplement {
+  font-size: 36px;
+}
+;">
+<h1 id="%E8%A3%9C%E8%B6%B3%E8%B3%87%E6%96%99">補足資料</h1>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="29" data-theme="gaia" data-style=":root {
+  --color-background: #fff;
+  --color-foreground: #000;
+  --color-highlight: #1a0dab;
+  --color-dimmed: #888;
+  font-size: 40px;
+  line-height: 1.2;
+}
+
+/** 詰め気味に微調整 **/
+section &gt; ul, marp-pre {
+  margin: 0.5em 0;
+}
+h1 {
+  margin-bottom: 0.5em;
+}
+
+section.lead img {
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+img[alt~=&quot;center&quot;] {
+  display: block;
+  margin: 0 auto;
+}
+
+.info {
+  border: 2px solid #dee2e6;
+  background-color: #cff4fc;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+.info::before {
+  content: &quot;📝&quot;;
+}
+.warn {
+  border: 2px solid #e3e6de;
+  background-color: #fcf9cf;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 0.5em 0;
+}
+.warn::before {
+  content: &quot;⚠️&quot;;
+}
+
+span.emphasis {
+  color: red;
+  font-weight: bold;
+}
+span.underline {
+  text-decoration: underline;
+}
+span.supplement {
+  font-size: 36px;
+}
+" lang="ja-JP" style="--theme:gaia;--style::root {
+  --color-background: #fff;
+  --color-foreground: #000;
+  --color-highlight: #1a0dab;
+  --color-dimmed: #888;
+  font-size: 40px;
+  line-height: 1.2;
+}
+
+/** 詰め気味に微調整 **/
+section &gt; ul, marp-pre {
+  margin: 0.5em 0;
+}
+h1 {
+  margin-bottom: 0.5em;
+}
+
+section.lead img {
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+img[alt~=&quot;center&quot;] {
+  display: block;
+  margin: 0 auto;
+}
+
+.info {
+  border: 2px solid #dee2e6;
+  background-color: #cff4fc;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+.info::before {
+  content: &quot;📝&quot;;
+}
+.warn {
+  border: 2px solid #e3e6de;
+  background-color: #fcf9cf;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 0.5em 0;
+}
+.warn::before {
+  content: &quot;⚠️&quot;;
+}
+
+span.emphasis {
+  color: red;
+  font-weight: bold;
+}
+span.underline {
+  text-decoration: underline;
+}
+span.supplement {
+  font-size: 36px;
+}
+;">
+<h1 id="%E3%83%AD%E3%82%B0%E3%81%AE%E5%A0%B4%E5%90%88">ログの場合</h1>
+<ul>
+<li>Q. ログの場合は文字列結合を使ったほうがいい？</li>
+<li>A. いいえ<br />
+ </li>
+<li>ログレベルによって、ログを出さない場合がある
+<ul>
+<li>書式指定の場合、その場合に文字列結合をしないですむ</li>
+</ul>
+</li>
+</ul>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-java">logger.info(<span class="hljs-string">&quot;Key: {}, Value: {}&quot;</span>, key, value);  <span class="hljs-comment">// Good</span>
+----
+logger.info(<span class="hljs-string">&quot;Key: &quot;</span> + key + <span class="hljs-string">&quot;, Value: &quot;</span> + value);  <span class="hljs-comment">// Bad</span>
+</code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="30" data-theme="gaia" data-style=":root {
+  --color-background: #fff;
+  --color-foreground: #000;
+  --color-highlight: #1a0dab;
+  --color-dimmed: #888;
+  font-size: 40px;
+  line-height: 1.2;
+}
+
+/** 詰め気味に微調整 **/
+section &gt; ul, marp-pre {
+  margin: 0.5em 0;
+}
+h1 {
+  margin-bottom: 0.5em;
+}
+
+section.lead img {
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+img[alt~=&quot;center&quot;] {
+  display: block;
+  margin: 0 auto;
+}
+
+.info {
+  border: 2px solid #dee2e6;
+  background-color: #cff4fc;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+.info::before {
+  content: &quot;📝&quot;;
+}
+.warn {
+  border: 2px solid #e3e6de;
+  background-color: #fcf9cf;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 0.5em 0;
+}
+.warn::before {
+  content: &quot;⚠️&quot;;
+}
+
+span.emphasis {
+  color: red;
+  font-weight: bold;
+}
+span.underline {
+  text-decoration: underline;
+}
+span.supplement {
+  font-size: 36px;
+}
+" lang="ja-JP" style="--theme:gaia;--style::root {
+  --color-background: #fff;
+  --color-foreground: #000;
+  --color-highlight: #1a0dab;
+  --color-dimmed: #888;
+  font-size: 40px;
+  line-height: 1.2;
+}
+
+/** 詰め気味に微調整 **/
+section &gt; ul, marp-pre {
+  margin: 0.5em 0;
+}
+h1 {
+  margin-bottom: 0.5em;
+}
+
+section.lead img {
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+img[alt~=&quot;center&quot;] {
+  display: block;
+  margin: 0 auto;
+}
+
+.info {
+  border: 2px solid #dee2e6;
+  background-color: #cff4fc;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+.info::before {
+  content: &quot;📝&quot;;
+}
+.warn {
+  border: 2px solid #e3e6de;
+  background-color: #fcf9cf;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 0.5em 0;
+}
+.warn::before {
+  content: &quot;⚠️&quot;;
+}
+
+span.emphasis {
+  color: red;
+  font-weight: bold;
+}
+span.underline {
+  text-decoration: underline;
+}
+span.supplement {
+  font-size: 36px;
+}
+;">
+<h1 id="stringformat-%E3%81%AE%E5%AE%9F%E8%A3%85%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6">String.format の実装について</h1>
+<ul>
+<li>毎回、書式をパースするの無駄では？</li>
+<li>ということで、パースした結果を内部で保持する改善提案があがった
+<ul>
+<li><a href="https://github.com/openjdk/jdk/pull/20055?utm_source=chatgpt.com">8335791: Speed ​​up j.u.Formatter &amp; String.format by wenshao · Pull Request #20055 · openjdk/jdk</a></li>
+<li>しかし、String Template と併せて検討するということになりクローズ</li>
+</ul>
+</li>
+<li>その後、String Template が<strong>当分見送り</strong>になってしまった…</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="31" data-theme="gaia" data-style=":root {
+  --color-background: #fff;
+  --color-foreground: #000;
+  --color-highlight: #1a0dab;
+  --color-dimmed: #888;
+  font-size: 40px;
+  line-height: 1.2;
+}
+
+/** 詰め気味に微調整 **/
+section &gt; ul, marp-pre {
+  margin: 0.5em 0;
+}
+h1 {
+  margin-bottom: 0.5em;
+}
+
+section.lead img {
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+img[alt~=&quot;center&quot;] {
+  display: block;
+  margin: 0 auto;
+}
+
+.info {
+  border: 2px solid #dee2e6;
+  background-color: #cff4fc;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+.info::before {
+  content: &quot;📝&quot;;
+}
+.warn {
+  border: 2px solid #e3e6de;
+  background-color: #fcf9cf;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 0.5em 0;
+}
+.warn::before {
+  content: &quot;⚠️&quot;;
+}
+
+span.emphasis {
+  color: red;
+  font-weight: bold;
+}
+span.underline {
+  text-decoration: underline;
+}
+span.supplement {
+  font-size: 36px;
+}
+" lang="ja-JP" style="--theme:gaia;--style::root {
+  --color-background: #fff;
+  --color-foreground: #000;
+  --color-highlight: #1a0dab;
+  --color-dimmed: #888;
+  font-size: 40px;
+  line-height: 1.2;
+}
+
+/** 詰め気味に微調整 **/
+section &gt; ul, marp-pre {
+  margin: 0.5em 0;
+}
+h1 {
+  margin-bottom: 0.5em;
+}
+
+section.lead img {
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+img[alt~=&quot;center&quot;] {
+  display: block;
+  margin: 0 auto;
+}
+
+.info {
+  border: 2px solid #dee2e6;
+  background-color: #cff4fc;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+.info::before {
+  content: &quot;📝&quot;;
+}
+.warn {
+  border: 2px solid #e3e6de;
+  background-color: #fcf9cf;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 0.5em 0;
+}
+.warn::before {
+  content: &quot;⚠️&quot;;
+}
+
+span.emphasis {
+  color: red;
+  font-weight: bold;
+}
+span.underline {
+  text-decoration: underline;
+}
+span.supplement {
+  font-size: 36px;
+}
+;">
+<h1 id="%E6%AD%A3%E8%A6%8F%E8%A1%A8%E7%8F%BE%E3%81%AE%E6%89%B1%E3%81%84%E6%96%B9-1">正規表現の扱い方 (1)</h1>
+<ul>
+<li>replaceAll メソッドは、内部で正規表現のコンパイルをしている</li>
+</ul>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-java"><span class="hljs-keyword">public</span> String <span class="hljs-title function_">replaceAll</span><span class="hljs-params">(String regex, String replacement)</span> {
+    <span class="hljs-keyword">return</span> Pattern.compile(regex).matcher(<span class="hljs-built_in">this</span>).replaceAll(replacement);
+}
+</code></pre>
+<ul>
+<li>このコンパイルが<strong>かなり遅い</strong>し、正規表現自体も遅い</li>
+<li>正規表現マッチが不要なら <strong>replace メソッド</strong>を使う
+<ul>
+<li>名前が紛らわしいが、replace メソッドも<strong>すべて置換する</strong></li>
+</ul>
+</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="32" data-theme="gaia" data-style=":root {
+  --color-background: #fff;
+  --color-foreground: #000;
+  --color-highlight: #1a0dab;
+  --color-dimmed: #888;
+  font-size: 40px;
+  line-height: 1.2;
+}
+
+/** 詰め気味に微調整 **/
+section &gt; ul, marp-pre {
+  margin: 0.5em 0;
+}
+h1 {
+  margin-bottom: 0.5em;
+}
+
+section.lead img {
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+img[alt~=&quot;center&quot;] {
+  display: block;
+  margin: 0 auto;
+}
+
+.info {
+  border: 2px solid #dee2e6;
+  background-color: #cff4fc;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+.info::before {
+  content: &quot;📝&quot;;
+}
+.warn {
+  border: 2px solid #e3e6de;
+  background-color: #fcf9cf;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 0.5em 0;
+}
+.warn::before {
+  content: &quot;⚠️&quot;;
+}
+
+span.emphasis {
+  color: red;
+  font-weight: bold;
+}
+span.underline {
+  text-decoration: underline;
+}
+span.supplement {
+  font-size: 36px;
+}
+" lang="ja-JP" style="--theme:gaia;--style::root {
+  --color-background: #fff;
+  --color-foreground: #000;
+  --color-highlight: #1a0dab;
+  --color-dimmed: #888;
+  font-size: 40px;
+  line-height: 1.2;
+}
+
+/** 詰め気味に微調整 **/
+section &gt; ul, marp-pre {
+  margin: 0.5em 0;
+}
+h1 {
+  margin-bottom: 0.5em;
+}
+
+section.lead img {
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+img[alt~=&quot;center&quot;] {
+  display: block;
+  margin: 0 auto;
+}
+
+.info {
+  border: 2px solid #dee2e6;
+  background-color: #cff4fc;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+.info::before {
+  content: &quot;📝&quot;;
+}
+.warn {
+  border: 2px solid #e3e6de;
+  background-color: #fcf9cf;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 0.5em 0;
+}
+.warn::before {
+  content: &quot;⚠️&quot;;
+}
+
+span.emphasis {
+  color: red;
+  font-weight: bold;
+}
+span.underline {
+  text-decoration: underline;
+}
+span.supplement {
+  font-size: 36px;
+}
+;">
+<h1 id="%E6%AD%A3%E8%A6%8F%E8%A1%A8%E7%8F%BE%E3%81%AE%E6%89%B1%E3%81%84%E6%96%B9-2">正規表現の扱い方 (2)</h1>
+<ul>
+<li>もし何度も実行するなら、Pattern クラスを定数として保持しておく</li>
+</ul>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">MASK</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;\\d&quot;</span>);
+---
+<span class="hljs-type">String</span> <span class="hljs-variable">masked</span> <span class="hljs-operator">=</span> MASK.matcher(tel).replaceAll(<span class="hljs-string">&quot;*&quot;</span>);
+</code></pre>
+<ul>
+<li>String.matches メソッドを使うときも同様</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="33" data-theme="gaia" data-style=":root {
   --color-background: #fff;
   --color-foreground: #000;
   --color-highlight: #1a0dab;
@@ -3620,8 +4441,145 @@ span.supplement {
 <li>Code: <a href="https://github.com/YujiSoftware/string-trap/tree/main/benchmark">https://github.com/YujiSoftware/string-trap/tree/main/benchmark</a></li>
 </ul>
 </section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="34" data-theme="gaia" data-style=":root {
+  --color-background: #fff;
+  --color-foreground: #000;
+  --color-highlight: #1a0dab;
+  --color-dimmed: #888;
+  font-size: 40px;
+  line-height: 1.2;
+}
+
+/** 詰め気味に微調整 **/
+section &gt; ul, marp-pre {
+  margin: 0.5em 0;
+}
+h1 {
+  margin-bottom: 0.5em;
+}
+
+section.lead img {
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+img[alt~=&quot;center&quot;] {
+  display: block;
+  margin: 0 auto;
+}
+
+.info {
+  border: 2px solid #dee2e6;
+  background-color: #cff4fc;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+.info::before {
+  content: &quot;📝&quot;;
+}
+.warn {
+  border: 2px solid #e3e6de;
+  background-color: #fcf9cf;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 0.5em 0;
+}
+.warn::before {
+  content: &quot;⚠️&quot;;
+}
+
+span.emphasis {
+  color: red;
+  font-weight: bold;
+}
+span.underline {
+  text-decoration: underline;
+}
+span.supplement {
+  font-size: 36px;
+}
+" lang="ja-JP" style="--theme:gaia;--style::root {
+  --color-background: #fff;
+  --color-foreground: #000;
+  --color-highlight: #1a0dab;
+  --color-dimmed: #888;
+  font-size: 40px;
+  line-height: 1.2;
+}
+
+/** 詰め気味に微調整 **/
+section &gt; ul, marp-pre {
+  margin: 0.5em 0;
+}
+h1 {
+  margin-bottom: 0.5em;
+}
+
+section.lead img {
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+img[alt~=&quot;center&quot;] {
+  display: block;
+  margin: 0 auto;
+}
+
+.info {
+  border: 2px solid #dee2e6;
+  background-color: #cff4fc;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+.info::before {
+  content: &quot;📝&quot;;
+}
+.warn {
+  border: 2px solid #e3e6de;
+  background-color: #fcf9cf;
+  color: #052c65;
+  padding: 0.5em;
+  border-radius: 10px;
+  margin: 0.5em 0;
+}
+.warn::before {
+  content: &quot;⚠️&quot;;
+}
+
+span.emphasis {
+  color: red;
+  font-weight: bold;
+}
+span.underline {
+  text-decoration: underline;
+}
+span.supplement {
+  font-size: 36px;
+}
+;">
+<h1 id="%E3%82%A2%E3%83%B3%E3%82%B1%E3%83%BC%E3%83%88%E3%81%AB%E3%81%94%E5%8D%94%E5%8A%9B%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84">アンケートにご協力ください</h1>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">全体アンケート</th>
+<th style="text-align:center">セッションアンケート</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><img src="img/jjug_qr.png" alt="" style="width:400px;" /></td>
+<td style="text-align:center"><img src="img/session_qr.png" alt="" style="width:400px;" /></td>
+</tr>
+</tbody>
+</table>
+</section>
 <script>!function(){"use strict";const t={h1:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"1"},style:"display: block; font-size: 2em; margin-block-start: 0.67em; margin-block-end: 0.67em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h2:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"2"},style:"display: block; font-size: 1.5em; margin-block-start: 0.83em; margin-block-end: 0.83em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h3:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"3"},style:"display: block; font-size: 1.17em; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h4:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"4"},style:"display: block; margin-block-start: 1.33em; margin-block-end: 1.33em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h5:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"5"},style:"display: block; font-size: 0.83em; margin-block-start: 1.67em; margin-block-end: 1.67em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h6:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"6"},style:"display: block; font-size: 0.67em; margin-block-start: 2.33em; margin-block-end: 2.33em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},span:{proto:()=>HTMLSpanElement},pre:{proto:()=>HTMLElement,style:"display: block; font-family: monospace; white-space: pre; margin: 1em 0; --marp-auto-scaling-white-space: pre;"}},e="data-marp-auto-scaling-wrapper",i="data-marp-auto-scaling-svg",n="data-marp-auto-scaling-container";class s extends HTMLElement{container;containerSize;containerObserver;svg;svgComputedStyle;svgPreserveAspectRatio="xMinYMid meet";wrapper;wrapperSize;wrapperObserver;constructor(){super();const t=t=>([e])=>{const{width:i,height:n}=e.contentRect;this[t]={width:i,height:n},this.updateSVGRect()};this.attachShadow({mode:"open"}),this.containerObserver=new ResizeObserver(t("containerSize")),this.wrapperObserver=new ResizeObserver((...e)=>{t("wrapperSize")(...e),this.flushSvgDisplay()})}static get observedAttributes(){return["data-downscale-only"]}connectedCallback(){this.shadowRoot.innerHTML=`\n<style>\n  svg[${i}] { display: block; width: 100%; height: auto; vertical-align: top; }\n  span[${n}] { display: table; white-space: var(--marp-auto-scaling-white-space, nowrap); width: max-content; }\n</style>\n<div ${e}>\n  <svg part="svg" ${i}>\n    <foreignObject><span ${n}><slot></slot></span></foreignObject>\n  </svg>\n</div>\n    `.split(/\n\s*/).join(""),this.wrapper=this.shadowRoot.querySelector(`div[${e}]`)??void 0;const t=this.svg;this.svg=this.wrapper?.querySelector(`svg[${i}]`)??void 0,this.svg!==t&&(this.svgComputedStyle=this.svg?window.getComputedStyle(this.svg):void 0),this.container=this.svg?.querySelector(`span[${n}]`)??void 0,this.observe()}disconnectedCallback(){this.svg=void 0,this.svgComputedStyle=void 0,this.wrapper=void 0,this.container=void 0,this.observe()}attributeChangedCallback(){this.observe()}flushSvgDisplay(){const{svg:t}=this;t&&(t.style.display="inline",requestAnimationFrame(()=>{t.style.display=""}))}observe(){this.containerObserver.disconnect(),this.wrapperObserver.disconnect(),this.wrapper&&this.wrapperObserver.observe(this.wrapper),this.container&&this.containerObserver.observe(this.container),this.svgComputedStyle&&this.observeSVGStyle(this.svgComputedStyle)}observeSVGStyle(t){const e=()=>{const i=(()=>{const e=t.getPropertyValue("--preserve-aspect-ratio");if(e)return e.trim();return`x${(({textAlign:t,direction:e})=>{if(t.endsWith("left"))return"Min";if(t.endsWith("right"))return"Max";if("start"===t||"end"===t){let i="rtl"===e;return"end"===t&&(i=!i),i?"Max":"Min"}return"Mid"})(t)}YMid meet`})();i!==this.svgPreserveAspectRatio&&(this.svgPreserveAspectRatio=i,this.updateSVGRect()),t===this.svgComputedStyle&&requestAnimationFrame(e)};e()}updateSVGRect(){let t=Math.ceil(this.containerSize?.width??0);const e=Math.ceil(this.containerSize?.height??0);void 0!==this.dataset.downscaleOnly&&(t=Math.max(t,this.wrapperSize?.width??0));const i=this.svg?.querySelector(":scope > foreignObject");if(i?.setAttribute("width",`${t}`),i?.setAttribute("height",`${e}`),this.svg&&(this.svg.setAttribute("viewBox",`0 0 ${t} ${e}`),this.svg.setAttribute("preserveAspectRatio",this.svgPreserveAspectRatio),this.svg.style.height=t<=0||e<=0?"0":""),this.container){const t=this.svgPreserveAspectRatio.toLowerCase();this.container.style.marginLeft=t.startsWith("xmid")||t.startsWith("xmax")?"auto":"0",this.container.style.marginRight=t.startsWith("xmi")?"auto":"0"}}}const r=(t,{attrs:e={},style:i})=>class extends t{constructor(...t){super(...t);for(const[t,i]of Object.entries(e))this.hasAttribute(t)||this.setAttribute(t,i);this._shadow()}static get observedAttributes(){return["data-auto-scaling"]}connectedCallback(){this._update()}attributeChangedCallback(){this._update()}_shadow(){if(!this.shadowRoot)try{this.attachShadow({mode:"open"})}catch(t){if(!(t instanceof Error&&"NotSupportedError"===t.name))throw t}return this.shadowRoot}_update(){const t=this._shadow();if(t){const e=i?`<style>:host { ${i} }</style>`:"";let n="<slot></slot>";const{autoScaling:s}=this.dataset;if(void 0!==s){n=`<marp-auto-scaling exportparts="svg:auto-scaling" ${"downscale-only"===s?"data-downscale-only":""}>${n}</marp-auto-scaling>`}t.innerHTML=e+n}}};let o;const a=()=>o??(o=!!document.createElement("div",{is:"marp-auto-scaling"}).outerHTML.startsWith("<div is"),o),l=Symbol();let c;const d="marpitSVGPolyfill:setZoomFactor,",h=Symbol(),g=Symbol();const p=()=>{const t="Apple Computer, Inc."===navigator.vendor,e=t?[v]:[],i={then:e=>(t?(async()=>{if(void 0===c){const t=document.createElement("canvas");t.width=10,t.height=10;const e=t.getContext("2d"),i=new Image(10,10),n=new Promise(t=>{i.addEventListener("load",()=>t())});i.crossOrigin="anonymous",i.src="data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2210%22%20height%3D%2210%22%20viewBox%3D%220%200%201%201%22%3E%3CforeignObject%20width%3D%221%22%20height%3D%221%22%20requiredExtensions%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxhtml%22%3E%3Cdiv%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxhtml%22%20style%3D%22width%3A%201px%3B%20height%3A%201px%3B%20background%3A%20red%3B%20position%3A%20relative%22%3E%3C%2Fdiv%3E%3C%2FforeignObject%3E%3C%2Fsvg%3E",await n,e.drawImage(i,0,0),c=e.getImageData(5,5,1,1).data[3]<128}return c})().then(t=>{null==e||e(t?[v]:[])}):null==e||e([]),i)};return Object.assign(e,i)};let m,u;function v(t){const e="object"==typeof t&&t.target||document,i="object"==typeof t?t.zoom:t;window[g]||(Object.defineProperty(window,g,{configurable:!0,value:!0}),document.body.style.zoom=1.0001,document.body.offsetHeight,document.body.style.zoom=1,window.addEventListener("message",({data:t,origin:e})=>{if(e===window.origin)try{if(t&&"string"==typeof t&&t.startsWith(d)){const[,e]=t.split(","),i=Number.parseFloat(e);Number.isNaN(i)||(u=i)}}catch(t){console.error(t)}}));let n=!1;Array.from(e.querySelectorAll("svg[data-marpit-svg]"),t=>{var e,s,r,o;t.style.transform||(t.style.transform="translateZ(0)");const a=i||u||t.currentScale||1;m!==a&&(m=a,n=a);const l=t.getBoundingClientRect(),{length:c}=t.children;for(let i=0;i<c;i+=1){const n=t.children[i];if(n.getScreenCTM){const t=n.getScreenCTM();if(t){const i=null!==(s=null===(e=n.x)||void 0===e?void 0:e.baseVal.value)&&void 0!==s?s:0,c=null!==(o=null===(r=n.y)||void 0===r?void 0:r.baseVal.value)&&void 0!==o?o:0,d=n.children.length;for(let e=0;e<d;e+=1){const s=n.children[e];if("SECTION"===s.tagName){const{style:e}=s;e.transformOrigin||(e.transformOrigin=`${-i}px ${-c}px`),e.transform=`scale(${a}) matrix(${t.a}, ${t.b}, ${t.c}, ${t.d}, ${t.e-l.left}, ${t.f-l.top}) translateZ(0.0001px)`;break}}}}}}),!1!==n&&Array.from(e.querySelectorAll("iframe"),({contentWindow:t})=>{null==t||t.postMessage(`${d}${n}`,"null"===window.origin?"*":window.origin)})}function w({once:t=!1,target:e=document}={}){const i=function(t=document){if(t[h])return t[h];let e=!0;const i=()=>{e=!1,delete t[h]};Object.defineProperty(t,h,{configurable:!0,value:i});let n=[],s=!1;(async()=>{try{n=await p()}finally{s=!0}})();const r=()=>{for(const e of n)e({target:t});s&&0===n.length||e&&window.requestAnimationFrame(r)};return r(),i}(e);return t?(i(),()=>{}):i}m=1,u=void 0;const b=Symbol(),y=(e=document)=>{if("undefined"==typeof window)throw new Error("Marp Core's browser script is valid only in browser context.");if(((e=document)=>{const i=window[l];i||customElements.define("marp-auto-scaling",s);for(const n of Object.keys(t)){const s=`marp-${n}`,o=t[n].proto();a()&&o!==HTMLElement?i||customElements.define(s,r(o,{style:t[n].style}),{extends:n}):(i||customElements.define(s,r(HTMLElement,t[n])),e.querySelectorAll(`${n}[is="${s}"]`).forEach(t=>{t.outerHTML=t.outerHTML.replace(new RegExp(`^<${n}`,"i"),`<${s}`).replace(new RegExp(`</${n}>$`,"i"),`</${s}>`)}))}window[l]=!0})(e),e[b])return e[b];const i=w({target:e}),n=()=>{i(),delete e[b]},o=Object.assign(n,{cleanup:n,update:()=>y(e)});return Object.defineProperty(e,b,{configurable:!0,value:o}),o},f=document.currentScript;y(f?f.getRootNode():document)}();
-</script></foreignObject></svg></div><div class="bespoke-marp-note" data-index="23" tabindex="0"><p>- [\[JDK-8263038\] Optimize String.format for simple specifiers](https://bugs.openjdk.org/browse/JDK-8263038)
+</script></foreignObject></svg></div><div class="bespoke-marp-note" data-index="24" tabindex="0"><p>- [\[JDK-8263038\] Optimize String.format for simple specifiers](https://bugs.openjdk.org/browse/JDK-8263038)
 - [\[JDK-8278642\] Refactor java.util.Formatter](https://bugs.openjdk.org/browse/JDK-8278642)
 - [\[JDK-8335252\] Reduce size of j.u.Formatter.Conversion#isValid](https://bugs.openjdk.org/browse/JDK-8335252)
 [\[JDK-8316704\] Regex-free parsing of Formatter and FormatProcessor specifiers - Java Bug System](https://bugs.openjdk.org/browse/JDK-8316704)</p></div><script>/*!! License: https://unpkg.com/@marp-team/marp-cli@4.5.0/lib/bespoke.js.LICENSE.txt */
