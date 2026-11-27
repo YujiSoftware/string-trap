@@ -1,0 +1,120 @@
+Benchmark                                                               (rowCount)  Mode  Cnt             Score           Error   Units
+CsvGenerationBenchmark.plusPerRow                                              100  avgt   10          6420.716 ±        84.796   ns/op
+CsvGenerationBenchmark.plusPerRow:gc.alloc.rate                                100  avgt   10          4763.213 ±        63.009  MB/sec
+CsvGenerationBenchmark.plusPerRow:gc.alloc.rate.norm                           100  avgt   10         32072.004 ±         0.001    B/op
+CsvGenerationBenchmark.plusPerRow:gc.count                                     100  avgt   10            83.000                  counts
+CsvGenerationBenchmark.plusPerRow:gc.time                                      100  avgt   10            37.000                      ms
+CsvGenerationBenchmark.plusPerRow                                             1000  avgt   10         71146.929 ±       304.123   ns/op
+CsvGenerationBenchmark.plusPerRow:gc.alloc.rate                               1000  avgt   10          5750.954 ±        24.610  MB/sec
+CsvGenerationBenchmark.plusPerRow:gc.alloc.rate.norm                          1000  avgt   10        429104.041 ±         0.005    B/op
+CsvGenerationBenchmark.plusPerRow:gc.count                                    1000  avgt   10           101.000                  counts
+CsvGenerationBenchmark.plusPerRow:gc.time                                     1000  avgt   10            46.000                      ms
+CsvGenerationBenchmark.plusPerRow                                            10000  avgt   10        690243.417 ±      1701.968   ns/op
+CsvGenerationBenchmark.plusPerRow:gc.alloc.rate                              10000  avgt   10          5295.277 ±        13.001  MB/sec
+CsvGenerationBenchmark.plusPerRow:gc.alloc.rate.norm                         10000  avgt   10       3833176.382 ±         0.016    B/op
+CsvGenerationBenchmark.plusPerRow:gc.count                                   10000  avgt   10            92.000                  counts
+CsvGenerationBenchmark.plusPerRow:gc.time                                    10000  avgt   10            43.000                      ms
+CsvGenerationBenchmark.plusPerRow                                           100000  avgt   10       9964770.016 ±    631631.412   ns/op
+CsvGenerationBenchmark.plusPerRow:gc.alloc.rate                             100000  avgt   10          3390.087 ±       210.847  MB/sec
+CsvGenerationBenchmark.plusPerRow:gc.alloc.rate.norm                        100000  avgt   10      35373293.456 ±         0.311    B/op
+CsvGenerationBenchmark.plusPerRow:gc.count                                  100000  avgt   10           377.000                  counts
+CsvGenerationBenchmark.plusPerRow:gc.time                                   100000  avgt   10           171.000                      ms
+CsvGenerationBenchmark.plusWholeDocument                                       100  avgt   10         31767.287 ±       330.565   ns/op
+CsvGenerationBenchmark.plusWholeDocument:gc.alloc.rate                         100  avgt   10         10620.525 ±       110.972  MB/sec
+CsvGenerationBenchmark.plusWholeDocument:gc.alloc.rate.norm                    100  avgt   10        353816.017 ±         0.001    B/op
+CsvGenerationBenchmark.plusWholeDocument:gc.count                              100  avgt   10           140.000                  counts
+CsvGenerationBenchmark.plusWholeDocument:gc.time                               100  avgt   10            64.000                      ms
+CsvGenerationBenchmark.plusWholeDocument                                      1000  avgt   10       2709405.541 ±     19102.165   ns/op
+CsvGenerationBenchmark.plusWholeDocument:gc.alloc.rate                        1000  avgt   10         12783.590 ±        90.190  MB/sec
+CsvGenerationBenchmark.plusWholeDocument:gc.alloc.rate.norm                   1000  avgt   10      36323825.489 ±         0.052    B/op
+CsvGenerationBenchmark.plusWholeDocument:gc.count                             1000  avgt   10           154.000                  counts
+CsvGenerationBenchmark.plusWholeDocument:gc.time                              1000  avgt   10            70.000                      ms
+CsvGenerationBenchmark.plusWholeDocument                                     10000  avgt   10     330277635.225 ±   1515419.864   ns/op
+CsvGenerationBenchmark.plusWholeDocument:gc.alloc.rate                       10000  avgt   10         11160.383 ±        51.143  MB/sec
+CsvGenerationBenchmark.plusWholeDocument:gc.alloc.rate.norm                  10000  avgt   10    3865610977.600 ±         7.649    B/op
+CsvGenerationBenchmark.plusWholeDocument:gc.count                            10000  avgt   10           226.000                  counts
+CsvGenerationBenchmark.plusWholeDocument:gc.time                             10000  avgt   10           108.000                      ms
+CsvGenerationBenchmark.plusWholeDocument                                    100000  avgt   10   47445200665.600 ± 151549493.900   ns/op
+CsvGenerationBenchmark.plusWholeDocument:gc.alloc.rate                      100000  avgt   10          8269.060 ±        26.318  MB/sec
+CsvGenerationBenchmark.plusWholeDocument:gc.alloc.rate.norm                 100000  avgt   10  411384831390.400 ±        30.598    B/op
+CsvGenerationBenchmark.plusWholeDocument:gc.count                           100000  avgt   10         23193.000                  counts
+CsvGenerationBenchmark.plusWholeDocument:gc.time                            100000  avgt   10         12800.000                      ms
+CsvGenerationBenchmark.stringBuilderDefaultCapacity                            100  avgt   10          6742.193 ±        48.971   ns/op
+CsvGenerationBenchmark.stringBuilderDefaultCapacity:gc.alloc.rate              100  avgt   10          3596.765 ±        26.100  MB/sec
+CsvGenerationBenchmark.stringBuilderDefaultCapacity:gc.alloc.rate.norm         100  avgt   10         25432.004 ±         0.001    B/op
+CsvGenerationBenchmark.stringBuilderDefaultCapacity:gc.count                   100  avgt   10            62.000                  counts
+CsvGenerationBenchmark.stringBuilderDefaultCapacity:gc.time                    100  avgt   10            27.000                      ms
+CsvGenerationBenchmark.stringBuilderDefaultCapacity                           1000  avgt   10         69472.295 ±       279.894   ns/op
+CsvGenerationBenchmark.stringBuilderDefaultCapacity:gc.alloc.rate             1000  avgt   10          3026.572 ±        12.245  MB/sec
+CsvGenerationBenchmark.stringBuilderDefaultCapacity:gc.alloc.rate.norm        1000  avgt   10        220512.040 ±         0.004    B/op
+CsvGenerationBenchmark.stringBuilderDefaultCapacity:gc.count                  1000  avgt   10            53.000                  counts
+CsvGenerationBenchmark.stringBuilderDefaultCapacity:gc.time                   1000  avgt   10            25.000                      ms
+CsvGenerationBenchmark.stringBuilderDefaultCapacity                          10000  avgt   10        753927.466 ±      3471.993   ns/op
+CsvGenerationBenchmark.stringBuilderDefaultCapacity:gc.alloc.rate            10000  avgt   10          3968.023 ±        18.218  MB/sec
+CsvGenerationBenchmark.stringBuilderDefaultCapacity:gc.alloc.rate.norm       10000  avgt   10       3137424.420 ±         0.019    B/op
+CsvGenerationBenchmark.stringBuilderDefaultCapacity:gc.count                 10000  avgt   10            70.000                  counts
+CsvGenerationBenchmark.stringBuilderDefaultCapacity:gc.time                  10000  avgt   10            32.000                      ms
+CsvGenerationBenchmark.stringBuilderDefaultCapacity                         100000  avgt   10      12261768.834 ±    819401.504   ns/op
+CsvGenerationBenchmark.stringBuilderDefaultCapacity:gc.alloc.rate           100000  avgt   10          2115.226 ±       142.907  MB/sec
+CsvGenerationBenchmark.stringBuilderDefaultCapacity:gc.alloc.rate.norm      100000  avgt   10      27152550.726 ±         0.582    B/op
+CsvGenerationBenchmark.stringBuilderDefaultCapacity:gc.count                100000  avgt   10           383.000                  counts
+CsvGenerationBenchmark.stringBuilderDefaultCapacity:gc.time                 100000  avgt   10           168.000                      ms
+CsvGenerationBenchmark.stringBuilderPreSized                                   100  avgt   10          5889.817 ±        22.220   ns/op
+CsvGenerationBenchmark.stringBuilderPreSized:gc.alloc.rate                     100  avgt   10          2666.645 ±        10.051  MB/sec
+CsvGenerationBenchmark.stringBuilderPreSized:gc.alloc.rate.norm                100  avgt   10         16472.003 ±         0.001    B/op
+CsvGenerationBenchmark.stringBuilderPreSized:gc.count                          100  avgt   10            46.000                  counts
+CsvGenerationBenchmark.stringBuilderPreSized:gc.time                           100  avgt   10            20.000                      ms
+CsvGenerationBenchmark.stringBuilderPreSized                                  1000  avgt   10         67113.487 ±       494.552   ns/op
+CsvGenerationBenchmark.stringBuilderPreSized:gc.alloc.rate                    1000  avgt   10          2399.407 ±        17.720  MB/sec
+CsvGenerationBenchmark.stringBuilderPreSized:gc.alloc.rate.norm               1000  avgt   10        168880.038 ±         0.004    B/op
+CsvGenerationBenchmark.stringBuilderPreSized:gc.count                         1000  avgt   10            42.000                  counts
+CsvGenerationBenchmark.stringBuilderPreSized:gc.time                          1000  avgt   10            21.000                      ms
+CsvGenerationBenchmark.stringBuilderPreSized                                 10000  avgt   10        649697.340 ±      3707.492   ns/op
+CsvGenerationBenchmark.stringBuilderPreSized:gc.alloc.rate                   10000  avgt   10          2550.567 ±        14.511  MB/sec
+CsvGenerationBenchmark.stringBuilderPreSized:gc.alloc.rate.norm              10000  avgt   10       1737888.357 ±         0.013    B/op
+CsvGenerationBenchmark.stringBuilderPreSized:gc.count                        10000  avgt   10            54.000                  counts
+CsvGenerationBenchmark.stringBuilderPreSized:gc.time                         10000  avgt   10            26.000                      ms
+CsvGenerationBenchmark.stringBuilderPreSized                                100000  avgt   10      15738638.974 ±    397725.205   ns/op
+CsvGenerationBenchmark.stringBuilderPreSized:gc.alloc.rate                  100000  avgt   10          1083.334 ±        26.805  MB/sec
+CsvGenerationBenchmark.stringBuilderPreSized:gc.alloc.rate.norm             100000  avgt   10      17877896.439 ±         0.618    B/op
+CsvGenerationBenchmark.stringBuilderPreSized:gc.count                       100000  avgt   10               ≈ 0                  counts
+DivideConcatBenchmark.concat                                                   N/A  avgt   10            28.131 ±         0.139   ns/op
+DivideConcatBenchmark.concat:gc.alloc.rate                                     N/A  avgt   10          3253.848 ±        16.131  MB/sec
+DivideConcatBenchmark.concat:gc.alloc.rate.norm                                N/A  avgt   10            96.000 ±         0.001    B/op
+DivideConcatBenchmark.concat:gc.count                                          N/A  avgt   10            56.000                  counts
+DivideConcatBenchmark.concat:gc.time                                           N/A  avgt   10            25.000                      ms
+DivideConcatBenchmark.divided                                                  N/A  avgt   10            42.894 ±         0.158   ns/op
+DivideConcatBenchmark.divided:gc.alloc.rate                                    N/A  avgt   10          6402.144 ±        23.693  MB/sec
+DivideConcatBenchmark.divided:gc.alloc.rate.norm                               N/A  avgt   10           288.000 ±         0.001    B/op
+DivideConcatBenchmark.divided:gc.count                                         N/A  avgt   10           110.000                  counts
+DivideConcatBenchmark.divided:gc.time                                          N/A  avgt   10            47.000                      ms
+StringConcat10Benchmark.stringConcatMultiple                                   N/A  avgt   10           109.224 ±         0.894   ns/op
+StringConcat10Benchmark.stringConcatMultiple:gc.alloc.rate                     N/A  avgt   10          4393.022 ±        35.959  MB/sec
+StringConcat10Benchmark.stringConcatMultiple:gc.alloc.rate.norm                N/A  avgt   10           503.200 ±         0.001    B/op
+StringConcat10Benchmark.stringConcatMultiple:gc.count                          N/A  avgt   10            77.000                  counts
+StringConcat10Benchmark.stringConcatMultiple:gc.time                           N/A  avgt   10            33.000                      ms
+StringConcat10Benchmark.stringConcatOnce                                       N/A  avgt   10            58.828 ±         0.186   ns/op
+StringConcat10Benchmark.stringConcatOnce:gc.alloc.rate                         N/A  avgt   10          1555.993 ±         4.932  MB/sec
+StringConcat10Benchmark.stringConcatOnce:gc.alloc.rate.norm                    N/A  avgt   10            96.000 ±         0.001    B/op
+StringConcat10Benchmark.stringConcatOnce:gc.count                              N/A  avgt   10            28.000                  counts
+StringConcat10Benchmark.stringConcatOnce:gc.time                               N/A  avgt   10            14.000                      ms
+StringConcatBenchmark.stringBuilder                                            N/A  avgt   10            16.368 ±         0.137   ns/op
+StringConcatBenchmark.stringBuilder:gc.alloc.rate                              N/A  avgt   10          3262.330 ±        27.050  MB/sec
+StringConcatBenchmark.stringBuilder:gc.alloc.rate.norm                         N/A  avgt   10            56.000 ±         0.001    B/op
+StringConcatBenchmark.stringBuilder:gc.count                                   N/A  avgt   10            56.000                  counts
+StringConcatBenchmark.stringBuilder:gc.time                                    N/A  avgt   10            22.000                      ms
+StringConcatBenchmark.stringConcat                                             N/A  avgt   10            21.983 ±         0.087   ns/op
+StringConcatBenchmark.stringConcat:gc.alloc.rate                               N/A  avgt   10          4511.136 ±        17.687  MB/sec
+StringConcatBenchmark.stringConcat:gc.alloc.rate.norm                          N/A  avgt   10           104.000 ±         0.001    B/op
+StringConcatBenchmark.stringConcat:gc.count                                    N/A  avgt   10            79.000                  counts
+StringConcatBenchmark.stringConcat:gc.time                                     N/A  avgt   10            33.000                      ms
+StringConcatBenchmark.stringConcatOperator                                     N/A  avgt   10            17.446 ±         0.274   ns/op
+StringConcatBenchmark.stringConcatOperator:gc.alloc.rate                       N/A  avgt   10          3061.012 ±        47.909  MB/sec
+StringConcatBenchmark.stringConcatOperator:gc.alloc.rate.norm                  N/A  avgt   10            56.000 ±         0.001    B/op
+StringConcatBenchmark.stringConcatOperator:gc.count                            N/A  avgt   10            54.000                  counts
+StringConcatBenchmark.stringConcatOperator:gc.time                             N/A  avgt   10            23.000                      ms
+StringConcatBenchmark.stringFormat                                             N/A  avgt   10           559.511 ±         3.952   ns/op
+StringConcatBenchmark.stringFormat:gc.alloc.rate                               N/A  avgt   10          2419.663 ±       125.869  MB/sec
+StringConcatBenchmark.stringFormat:gc.alloc.rate.norm                          N/A  avgt   10          1420.000 ±        82.869    B/op
+StringConcatBenchmark.stringFormat:gc.count                                    N/A  avgt   10            42.000                  counts
+StringConcatBenchmark.stringFormat:gc.time                                     N/A  avgt   10            18.000                      ms

@@ -80,7 +80,7 @@ style: |
 
 # 概要
 
-- Java で String クラス（文字列）は、基本的にパフォーマンス（実行速度）を気にせずに使える
+- String クラス（文字列）は、基本的にパフォーマンス（実行速度）を気にせずに使える
 - しかし、それでも遅くなるときがある
   - どういうときなのか
   - どうして遅くなるのか
@@ -99,10 +99,11 @@ https://yuji.software/string-trap に置いてあります。
 
 <hr>
 
-- 遅い = 悪い **ではない**
+- 遅くなる書き方 = 悪い書き方 **ではない**
 - 実行頻度の低いコードは遅くても困らない
   - 例：ユニットテスト、初期化処理
   - これらは、遅くなる書き方でも 1ms も変わらない
+  - そのような箇所は、わかりやすさを優先したほうがいい
 - **一律に速くなる書き方を強制しないこと！**
 
 ---
@@ -155,8 +156,8 @@ public String example(String key, int value) {
 
 # \+ 演算子による文字列結合の実装
 
-1. 全体の長さを計算
-2. ちょうど収まる長さの byte 配列を作成
+1. 全体の文字列の長さを計算
+2. ↑が収まるサイズの byte 配列を作成
 3. 各要素を文字列として表現し、必要な領域に詰め込む
 
 <div class="info">
@@ -168,7 +169,7 @@ Java 9 以降の OpenJDK コンパイラの場合<br>
 
 # \+ 演算子による文字列結合の実装
 
-- key = "foo", value = 12 の場合
+`key + ":" + value`（※ key = "foo", value = 12）の場合
 
 ![center](img/string-concat.drawio.svg)
 
@@ -235,11 +236,11 @@ public String example(String key, int value) {
 # StringBuilder 文字列結合の動き
 
 1. new StringBuilder()
-    - 16文字分の容量のバッファを作成
+    - 16文字分の容量の配列を作成
 2. .append(...)
-    - バッファに追加
+    - 配列に追加
 3. .toString()
-    - バッファを元に文字列を作成
+    - 出来上がった配列を元に文字列を作成
 
 ---
 
@@ -251,7 +252,8 @@ public String example(String key, int value) {
 
 # バッファが足りないとき
 
-1. **約2倍**の容量に拡張する（正確には2倍＋2）
+1. より大きな新しい配列を作成
+（容量は 2倍＋2、または追加する文字列が収まる分量）
 2. 中身をコピー
 3. 新しい配列に文字を格納
 
@@ -270,13 +272,13 @@ public String example(String key, int value) {
 
 ---
 
-# 参考：String vs StringBuilder
+# 参考：\+ 演算子 vs StringBuilder
 
 - 自宅PCで、8列のデータをカンマ区切りで結合するサンプルコードを計測（ns/op）
 
 |行数|100|1,000|10,000|100,000|
 |:--|--:|--:|--:|--:|
-|String|26,403|2,406,795|315,674,831|36,596,801,877|
+|+演算|26,403|2,406,795|315,674,831|36,596,801,877|
 |Builder|6,453|65,769|700,336|8,275,654|
 |比率|4|37|451|4,422|
 
@@ -297,27 +299,6 @@ String の + 演算子結合の連続は、急激に遅くなる
 ```java
 var sb = new StringBuilder(rows.length * 128);
 ```
-
----
-
-# StringBuilder の良くない使い方
-
-- **Bad:** \+演算子と併用する（約10%ぐらい遅くなる）
-- **Good:** .append(…) のみを使う
-
-```java
-var csv = new StringBuilder();
-for (String[] row : rows) {
-    // Bad
-    csv.append(row[0] + "," + row[1] + "," + row[2] + "\r\n");
-    // Good
-    csv.append(row[0]).append(",");
-    csv.append(row[1]).append(",");
-    csv.append(row[2]).append("\r\n");
-}
-```
-
-
 
 ---
 
@@ -345,7 +326,7 @@ public String example(String key, int value) {
 return new Formatter().format(format, args).toString();
 ```
 
-1. new Formtter(): 
+1. new Formatter(): 
     - 内部で StringBuilder を作成
 2. format(format, args)
     - 引数の format をパース
@@ -386,7 +367,7 @@ return new Formatter().format(format, args).toString();
 - Java 23 で、複雑な書式指定子（例：%05d や %.2f）でも正規表現を使わない実装になった
 
 → 単純な結合なら、**依然として \+ 演算子のほうが良い**
-→ 桁揃えなど**書式指定**のためなら、使うのはアリ？
+→ 桁揃えなど**書式指定**のためなら、使うのはアリ
 
 <!--
 - [\[JDK-8263038\] Optimize String.format for simple specifiers](https://bugs.openjdk.org/browse/JDK-8263038)
@@ -400,11 +381,11 @@ return new Formatter().format(format, args).toString();
 # まとめ
 
 - Java で String クラス（文字列）は、基本的に速い
-  - しかし、実行回数が多いときは気をつける必要がある
-- 適切な文字列の使い方をすると、遅くなるのは回避できる
+  - しかし、**実行回数が多いとき**は気をつける必要がある
+- 適切な文字列の使い方をすると、**遅くなるのは回避できる**
   - 内部実装を知っておくとハマりにくい
 
-文字列の処理でパフォーマンスが求められたときは、このセッションのことを思い出そう！
+文字列処理のパフォーマンスで困ったときは、このセッションのことを思い出そう！
 
 ---
 
@@ -444,7 +425,7 @@ logger.info("Key: " + key + ", Value: " + value);  // Bad
 
 - 毎回、書式をパースするの無駄では？
 - ということで、パースした結果を内部で保持する改善提案があがった
-  - [8335791: Speed ​​up j.u.Formatter & String.format by wenshao · Pull Request #20055 · openjdk/jdk](https://github.com/openjdk/jdk/pull/20055?utm_source=chatgpt.com)
+  - [8335791: Speed ​​up j.u.Formatter & String.format by wenshao · Pull Request #20055 · openjdk/jdk](https://github.com/openjdk/jdk/pull/20055)
   - しかし、String Template と併せて検討するということになりクローズ
 - その後、String Template が**当分見送り**になってしまった…
 
