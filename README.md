@@ -3,7 +3,7 @@ marp: true
 author: "@YujiSoftware"
 title: "String クラスの罠を理解して、最高のパフォーマンスを引き出そう！"
 description: "JJUG CCC 2026 Fall のセッション資料です。"
-image: "https://yuji.software/emoji/img/card.png"
+image: "https://yuji.software/string-trap/img/card.png"
 theme: gaia
 style: |
   :root {
